@@ -62,6 +62,11 @@ static tap shift_tap_state = {
         .state = 0
 };
 
+static tap brsl_tap_state = {
+        .is_press_action = true,
+        .state = 0
+};
+
 void shift_finished (qk_tap_dance_state_t *state, void *user_data) {
     shift_tap_state.state = cur_dance(state);
     switch (shift_tap_state.state) {
@@ -93,6 +98,26 @@ void shift_reset (qk_tap_dance_state_t *state, void *user_data) {
     shift_tap_state.state = 0;
 }
 
+void brsl_finished(qk_tap_dance_state_t *state, void *user_data) {
+    brsl_tap_state.state = cur_dance(state);
+    switch (brsl_tap_state.state) {
+        case SINGLE_TAP: register_code(KC_LBRC); break;
+        case DOUBLE_TAP: register_code(KC_RBRC); break;
+        case TRIPLE_TAP: register_code(KC_BSLS); break;
+    }
+}
+
+void brsl_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (brsl_tap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_LBRC); break;
+        case DOUBLE_TAP: unregister_code(KC_RBRC); break;
+        case TRIPLE_TAP: unregister_code(KC_BSLS); break;
+    }
+    brsl_tap_state.state = 0;
+}
+
+
 qk_tap_dance_action_t tap_dance_actions[] = {
-        [SDNC]     = ACTION_TAP_DANCE_FN_ADVANCED(NULL,shift_finished, shift_reset)
+        [SDNC]     = ACTION_TAP_DANCE_FN_ADVANCED(NULL,shift_finished, shift_reset),
+        [BRSL]     = ACTION_TAP_DANCE_FN_ADVANCED(NULL, brsl_finished, brsl_reset)
 };

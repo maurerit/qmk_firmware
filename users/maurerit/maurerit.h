@@ -23,7 +23,7 @@ enum {
 enum {
     //Shift Dance
     SDNC = 0,
-    SOME_OTHER_DANCE
+    BRSL
 };
 
 int cur_dance (qk_tap_dance_state_t *state);
